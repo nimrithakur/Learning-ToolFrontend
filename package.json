@@ -1,0 +1,16 @@
+{
+  "name": "learning-tool-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for Smart Video Learning Tool",
+  "scripts": {
+    "dev": "python -m http.server 8080",
+    "serve": "python3 -m http.server 8080"
+  },
+  "keywords": [
+    "education",
+    "learning",
+    "frontend"
+  ],
+  "author": "",
+  "license": "MIT"
+}

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Smart Video Learning Tool - Transform YouTube videos into structured learning materials with AI">
+    <title>Smart Video Learning Tool</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+        <span class="theme-icon">🌙</span>
+    </button>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">🎓</span>
+                <h1>Smart Video Learning Tool</h1>
+            </div>
+            <p class="tagline">Transform YouTube videos into structured learning materials with AI</p>
+        </header>
+
+        <!-- Input Section -->
+        <section class="input-section">
+            <div class="input-card">
+                <h2>Generate Learning Materials</h2>
+                
+                <!-- Mode Toggle -->
+                <div class="mode-toggle">
+                    <button class="mode-btn active" data-mode="url" onclick="switchMode('url')">
+                        <span class="mode-icon">🎥</span>
+                        YouTube URL
+                    </button>
+                    <button class="mode-btn" data-mode="transcript" onclick="switchMode('transcript')">
+                        <span class="mode-icon">📝</span>
+                        Paste Transcript
+                    </button>
+                </div>
+
+                <!-- URL Input Mode -->
+                <div id="urlMode" class="input-mode active">
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="videoUrl" 
+                            class="video-input"
+                            placeholder="https://www.youtube.com/watch?v=..."
+                            aria-label="YouTube video URL"
+                        >
+                        <button id="processBtn" class="btn btn-primary">
+                            <span class="btn-icon">✨</span>
+                            Generate Learning Package
+                        </button>
+                    </div>
+                    <div class="input-hint">
+                        💡 Tip: Works best with educational videos that have captions/subtitles
+                    </div>
+                </div>
+
+                <!-- Transcript Input Mode -->
+                <div id="transcriptMode" class="input-mode">
+                    <div class="input-group-vertical">
+                        <textarea 
+                            id="transcriptInput" 
+                            class="transcript-input"
+                            placeholder="Paste your video transcript here... (minimum 100 characters)"
+                            aria-label="Video transcript"
+                            rows="10"
+                        ></textarea>
+                        <div class="char-counter">
+                            <span id="charCount">0</span> / 50,000 characters
+                        </div>
+                        <button id="processTranscriptBtn" class="btn btn-primary">
+                            <span class="btn-icon">✨</span>
+                            Generate Quiz & Materials
+                        </button>
+                    </div>
+                    <div class="input-hint">
+                        💡 Tip: Paste a transcript from any video or lecture to generate a quiz
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state hidden">
+            <div class="spinner"></div>
+            <p class="loading-text">Processing your video...</p>
+            <div class="loading-steps">
+                <div class="step active" data-step="1">
+                    <span class="step-icon">📥</span>
+                    <span>Extracting transcript</span>
+                </div>
+                <div class="step" data-step="2">
+                    <span class="step-icon">🤖</span>
+                    <span>AI processing</span>
+                </div>
+                <div class="step" data-step="3">
+                    <span class="step-icon">✅</span>
+                    <span>Generating materials</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="error-state hidden">
+            <div class="error-icon">⚠️</div>
+            <h3>Oops! Something went wrong</h3>
+            <p id="errorMessage" class="error-message"></p>
+            <button class="btn btn-secondary" onclick="location.reload()">Try Again</button>
+        </div>
+
+        <!-- Results Section -->
+        <section id="resultsSection" class="results-section hidden">
+            <!-- Video Info -->
+            <div class="video-info">
+                <h2 id="videoTitle">Video Title</h2>
+                <div class="video-meta">
+                    <span class="meta-item">
+                        <span class="meta-icon">⏱️</span>
+                        <span id="processingTime">Processing time</span>
+                    </span>
+                    <span class="meta-item">
+                        <span class="meta-icon">📝</span>
+                        <span id="transcriptLength">Transcript length</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div class="tabs">
+                <button class="tab active" data-tab="summary">
+                    <span class="tab-icon">📄</span>
+                    Summary
+                </button>
+                <button class="tab" data-tab="keypoints">
+                    <span class="tab-icon">🎯</span>
+                    Key Points
+                </button>
+                <button class="tab" data-tab="quiz">
+                    <span class="tab-icon">❓</span>
+                    Quiz (10 Questions)
+                </button>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Summary Tab -->
+                <div id="summary" class="tab-pane active">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3>
+                                <span class="card-icon">📄</span>
+                                AI-Generated Summary
+                            </h3>
+                            <div class="card-actions">
+                                <button class="icon-btn" onclick="copyContent('summaryContent')" title="Copy to clipboard">
+                                    <span>📋</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="summaryContent" class="card-body">
+                            <!-- Summary will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Points Tab -->
+                <div id="keypoints" class="tab-pane">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3>
+                                <span class="card-icon">🎯</span>
+                                Key Learning Points
+                            </h3>
+                            <div class="card-actions">
+                                <button class="icon-btn" onclick="copyContent('keypointsContent')" title="Copy to clipboard">
+                                    <span>📋</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="keypointsContent" class="card-body">
+                            <!-- Key points will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz Tab -->
+                <div id="quiz" class="tab-pane">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3>
+                                <span class="card-icon">❓</span>
+                                Test Your Knowledge
+                            </h3>
+                            <div class="quiz-score hidden" id="quizScore">
+                                Score: <span id="scoreValue">0</span>/10
+                            </div>
+                        </div>
+                        <div id="quizContent" class="card-body quiz-body">
+                            <!-- Quiz questions will be inserted here -->
+                        </div>
+                        <div class="quiz-actions">
+                            <button id="submitQuiz" class="btn btn-primary" onclick="submitQuiz()">
+                                Submit Answers
+                            </button>
+                            <button id="resetQuiz" class="btn btn-secondary hidden" onclick="resetQuiz()">
+                                Retake Quiz
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="downloadContent()">
+                    <span class="btn-icon">⬇️</span>
+                    Download All
+                </button>
+                <button class="btn btn-secondary" onclick="processNewVideo()">
+                    <span class="btn-icon">🔄</span>
+                    Process New Video
+                </button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Built with ❤️ for better learning experiences | Powered by AI</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
