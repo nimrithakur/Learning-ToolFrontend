@@ -125,7 +125,8 @@ async function processTranscript() {
     animateLoadingSteps();
     
     try {
-        const response = await fetch('/api/process-transcript', {
+        const apiUrl = window.API_CONFIG?.BASE_URL || '/api';
+        const response = await fetch(`${apiUrl}/process-transcript`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -167,7 +168,8 @@ async function processVideo() {
     animateLoadingSteps();
     
     try {
-        const response = await fetch('/api/process', {
+        const apiUrl = window.API_CONFIG?.BASE_URL || '/api';
+        const response = await fetch(`${apiUrl}/process`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
