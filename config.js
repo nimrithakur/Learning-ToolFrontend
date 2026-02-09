@@ -5,7 +5,7 @@ const API_CONFIG = {
     // BASE_URL: 'http://localhost:3001/api'
     
     // For production - Update this with your Vercel backend URL
-    BASE_URL: 'https://learning-toolproj.vercel.app/api/'
+    BASE_URL: 'https://learning-toolproj.vercel.app/api'
     
     // Example: BASE_URL: 'https://your-backend.vercel.app/api'
 };
